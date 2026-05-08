@@ -4,26 +4,29 @@ import Cells.StringCell;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Scanner;
 
 public class Application {
     public static void main(String[] args) {
 
-        Spreadsheet spreadsheet= new Spreadsheet();
+        Scanner scanner = new Scanner(System.in);
+        boolean isRunning =true;
+        CommandProcessor commandProcessor =new CommandProcessor();
+        do {
+            String input = "";
+            input = scanner.nextLine();
+            if (!input.trim().isEmpty()){
+                System.out.println(commandProcessor.executeCommand(input));
+            }
 
-        List<Cell> row1 = new ArrayList<>();
-        row1.add(new IntCell(10));
-        row1.add(new IntCell(20));
-        row1.add(new StringCell("Hello"));
+            if (commandProcessor.getCommand() == "exit"){
+                isRunning=false;
+                scanner.close();
+            }
+        }while (isRunning);
 
-        List<Cell> row2 = new ArrayList<>();
-        row2.add(new IntCell(100));
-        row2.add(new StringCell("OOP"));
-        row2.add(new IntCell(50));
 
-        spreadsheet.addRow(row1);
-        spreadsheet.addRow(row2);
 
-        System.out.println(spreadsheet.printTable());
 
     }
 }

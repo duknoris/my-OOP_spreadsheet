@@ -1,15 +1,19 @@
 package Cells;
 
 public class DoubleCell implements Cell {
+    private double value;
 
+    public DoubleCell(double value) {
+        this.value = value;
+    }
 
     @Override
     public String getValue() {
-        return "";
+        return String.valueOf(value);
     }
 
     @Override
     public String getDisplayValue() {
-        return "";
+        return String.valueOf(value);
     }
 }
