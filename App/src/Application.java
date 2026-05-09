@@ -13,8 +13,7 @@ public class Application {
         boolean isRunning =true;
         CommandProcessor commandProcessor =new CommandProcessor();
         do {
-            String input = "";
-            input = scanner.nextLine();
+            String input = scanner.nextLine();
             if (!input.trim().isEmpty()){
                 System.out.println(commandProcessor.executeCommand(input));
             }
@@ -24,9 +23,6 @@ public class Application {
                 scanner.close();
             }
         }while (isRunning);
-
-
-
 
     }
 }

@@ -11,10 +11,13 @@ public class CommandProcessor {
         this.currentFilePath =null;
         this.filePath = null;
         this.command = null;
+        spreadsheet = new Spreadsheet();
     }
 
     public String executeCommand(String input){
 
+        filePath=null;
+        command=null;
         return translator(input);
     }
 
@@ -22,14 +25,16 @@ public class CommandProcessor {
         input = input.trim();
         String[] commandList = {"open" , "close" , "save" , "save as" , "help" , "exit"};
 
-        filePath=null;
+
         String[] words = input.split(" ");
         filePath = words[words.length - 1];
 
-        command=null;
+
         for (String currentCommand : commandList){
             if (input.startsWith(currentCommand)){
                 command = currentCommand;
+                input = input.replace(currentCommand,"");
+                filePath = input.trim();
             }
         }
 
@@ -43,13 +48,41 @@ public class CommandProcessor {
     public String executeCommandLogic(String command , String filePath){
         switch (command){
             case "open":
-                return filePath + " is open ";
+                String message;
+                try {
+                   message =  spreadsheet.loadFromFile(filePath);
+                }catch (Exception e){
+                    return "ERROR on opening the file";
+                }
+                currentFilePath = filePath;
+                return message;
+
             case "close"  :
-                return filePath + " is close";
+                if (currentFilePath != null){
+                    String path = currentFilePath;
+                    currentFilePath =null;
+                    filePath =null;
+                    command =null;
+                    spreadsheet =new Spreadsheet();
+                    return "Successfully closed " + path;
+                }
+                else {
+                    return "no file is open to be closed try \"help\" for more information ";
+                }
             case "save":
-                return  filePath + " is save";
+                if (currentFilePath != null){
+
+                }
+                else {
+                    return "no file is open to be saved try \"help\" for more information ";
+                }
             case "save as"  :
-                return getCurrentFilePath() + " is save at " + filePath;
+                if (currentFilePath != null){
+
+                }
+                else {
+                    return "no file is open to be saved as try \"help\" for more information ";
+                }
             case "help" :
                 return "The following commands are supported: \n" +
                         "open <file> opens <file> \n" +
