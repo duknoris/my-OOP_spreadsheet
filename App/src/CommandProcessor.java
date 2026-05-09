@@ -1,3 +1,9 @@
+import javax.imageio.IIOException;
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
+
+
 public class CommandProcessor {
 
     private String currentFilePath;
@@ -23,18 +29,17 @@ public class CommandProcessor {
 
     protected String translator(String input){
         input = input.trim();
-        String[] commandList = {"open" , "close" , "save" , "save as" , "help" , "exit"};
-
+        String[] commandList = {"open" , "close" , "save as", "save"  , "help" , "exit" , "print", "edit"};
 
         String[] words = input.split(" ");
         filePath = words[words.length - 1];
-
 
         for (String currentCommand : commandList){
             if (input.startsWith(currentCommand)){
                 command = currentCommand;
                 input = input.replace(currentCommand,"");
                 filePath = input.trim();
+                break;
             }
         }
 
@@ -58,7 +63,8 @@ public class CommandProcessor {
                 return message;
 
             case "close"  :
-                if (currentFilePath != null){
+                if (currentFilePath != null && !currentFilePath.isEmpty() ){
+
                     String path = currentFilePath;
                     currentFilePath =null;
                     filePath =null;
@@ -69,36 +75,75 @@ public class CommandProcessor {
                 else {
                     return "no file is open to be closed try \"help\" for more information ";
                 }
-            case "save":
-                if (currentFilePath != null){
 
+            case "save":
+                if (currentFilePath != null && !currentFilePath.isEmpty()){
+                    String content = spreadsheet.translateToText();
+                    return saveToFail(currentFilePath , content);
                 }
                 else {
                     return "no file is open to be saved try \"help\" for more information ";
                 }
-            case "save as"  :
-                if (currentFilePath != null){
 
+            case "save as"  :
+                if (currentFilePath != null && !currentFilePath.isEmpty()){
+                    String content = spreadsheet.translateToText();
+                    return saveToFail(filePath , content);
                 }
                 else {
                     return "no file is open to be saved as try \"help\" for more information ";
                 }
             case "help" :
                 return "The following commands are supported: \n" +
-                        "open <file> opens <file> \n" +
+                        "open <file>       opens <file> \n" +
                         "close             closes current opened file\n" +
                         "save              saves the currently open file\n" +
                         "save as <file>    saves the currently open file in <file>\n" +
                         "help              prints this information\n" +
-                        "exit              exites the program";
+                        "exit              exites the program \n" +
+                        "print             prints the content of the spreadsheet \n" +
+                        "edit              R<number of row>C<number of line> <new content of cell>      \n" +
+                        "                  replace the content of the selector cell whet the new content \n " ;
             case "exit":
                 return "Exiting the program...";
+            case "print":
+                if (currentFilePath != null && !currentFilePath.isEmpty()){
+                    return spreadsheet.printTable();
+                }
+                else {
+                    return "no file is open to be pointed try \"help\" for more information ";
+                }
+            case "edit":
+                if (currentFilePath != null && !currentFilePath.isEmpty()){
+                    return "is edited";
+                }
+                else {
+                    return "no file is open to be edited try \"help\" for more information ";
+                }
+
             default:
                 return "unknown command";
         }
     }
 
 
+    public String saveToFail(String filePath , String content){
+        try {
+            FileWriter writer = new FileWriter(filePath);
+            writer.write(content);
+            writer.close();
+
+            if (currentFilePath != filePath){
+                File file = new File(currentFilePath);
+                file.delete();
+            }
+
+            return "Successfully saved " + filePath;
+        }
+        catch (IOException e){
+            return "ERROR saving fail: " + e.getMessage();
+        }
+    }
 
 
 

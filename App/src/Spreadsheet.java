@@ -1,8 +1,12 @@
 import Cells.Cell;
 import Cells.CellFactory;
+import Cells.StringCell;
 
+import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.List;
+import  java.io.File;
+import java.util.Scanner;
 
 public class Spreadsheet {
 
@@ -34,7 +38,7 @@ public class Spreadsheet {
 
     public String loadFromFile(String filePath) {
         this.table.clear();
-        java.io.File file = new java.io.File(filePath);
+        File file = new java.io.File(filePath);
 
         if (!file.exists()) {
             try {
@@ -45,7 +49,7 @@ public class Spreadsheet {
             }
         }
 
-        try (java.util.Scanner fileScanner = new java.util.Scanner(file)) {
+        try (Scanner fileScanner = new Scanner(file)) {
             while (fileScanner.hasNextLine()) {
                 String line = fileScanner.nextLine();
                 String[] stringCells = line.split(",", -1);
@@ -57,14 +61,30 @@ public class Spreadsheet {
                 this.addRow(currentRow);
             }
             return "Successfully opened " + filePath;
-        } catch (java.io.FileNotFoundException e) {
+        } catch (FileNotFoundException e) {
             return "Error: File not found.";
         }
     }
 
 
-    public String saveToFile(String filePath){
-        return "";
+    public String translateToText(){
+        StringBuilder sd = new StringBuilder();
+        for (List<Cell> row : table){
+            for (int i =0 ; i<row.size() ; i++){
+                Cell cell =row.get(i);
+                String val =cell.getValue();
+                if (cell.getClass() == StringCell.class){
+                    val = val.replace("\\", "\\\\").replace("\"", "\\\"");
+                    val = "\"" + val + "\"";
+                }
+                sd.append(val);
+                if (i<row.size()-1){
+                    sd.append(",");
+                }
+            }
+            sd.append("\n");
+        }
+        return sd.toString();
     }
 
 }
