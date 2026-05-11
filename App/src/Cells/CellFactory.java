@@ -19,16 +19,14 @@ public class CellFactory {
         } catch (NumberFormatException e) {
 
         }
-
         try {
             double doubleValue = Double.parseDouble(data);
             return new DoubleCell(doubleValue);
         } catch (NumberFormatException e) {
+            throw new RuntimeException(" \""+ data + "\" is not valued input");
 
         }
 
-
-        return new StringCell(data);
 
     }
 }

@@ -1,11 +1,12 @@
+package Comands;
+
 import Cells.Cell;
 import Cells.CellFactory;
 import Cells.StringCell;
 
-import java.io.FileNotFoundException;
+import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
-import  java.io.File;
 import java.util.Scanner;
 
 public class Spreadsheet {
@@ -22,12 +23,30 @@ public class Spreadsheet {
     }
 
     public String printTable(){
+
+        if (table.isEmpty()) {
+            return "Empty table";
+        }
+
+        int numCols = 0;
+        for (List<Cell> row : table) {
+            if (row.size() > numCols) numCols = row.size();
+        }
+
+        int[] colWidths = new int[numCols];
+        for (List<Cell> row : table) {
+            for (int i = 0; i < row.size(); i++) {
+                int len = row.get(i).getDisplayValue().length();
+                if (len > colWidths[i]) colWidths[i] = len;
+            }
+        }
+
         StringBuilder builder = new StringBuilder();
-
-        for (List<Cell> row : table){
-            for (Cell cell :row){
-
-                builder.append(cell.getDisplayValue()).append(" | ");
+        for (List<Cell> row : table) {
+            builder.append("|");
+            for (int i = 0; i < numCols; i++) {
+                String val = (i < row.size()) ? row.get(i).getDisplayValue() : "";
+                builder.append(String.format(" %-" + colWidths[i] + "s |", val));
             }
             builder.append("\n");
         }
@@ -38,13 +57,13 @@ public class Spreadsheet {
 
     public String loadFromFile(String filePath) {
         this.table.clear();
-        File file = new java.io.File(filePath);
+        File file = new File(filePath);
 
         if (!file.exists()) {
             try {
                 file.createNewFile();
                 return "Successfully created and opened new empty file: " + filePath;
-            } catch (java.io.IOException e) {
+            } catch (IOException e) {
                 return "Error creating file: " + e.getMessage();
             }
         }
@@ -87,4 +106,39 @@ public class Spreadsheet {
         return sd.toString();
     }
 
+    public String setCell(int row, int column,String content ){
+        int rowIndex = row - 1;
+        int colIndex = column - 1;
+
+        if (rowIndex < 0 || colIndex < 0) {
+            return "Error: row and column must be greater than 0";
+        }
+
+        while (table.size() <= rowIndex) {
+            table.add(new ArrayList<>());
+        }
+
+        List<Cell> currentRow = table.get(rowIndex);
+
+        while (currentRow.size() <= colIndex) {
+            currentRow.add(new Cells.EmptyCell());
+        }
+
+        try {
+            currentRow.set(colIndex, CellFactory.create(content));
+            return "Successfully edited R" + row + "C" + column;
+        } catch (RuntimeException e) {
+            return "Error: " + e.getMessage();
+        }
+    }
+
+    public String saveToFile(String filePath) {
+        String content = translateToText();
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(filePath))) {
+            writer.write(content);
+            return "Successfully saved " + filePath;
+        } catch (IOException e) {
+            return "Error saving file: " + e.getMessage();
+        }
+    }
 }

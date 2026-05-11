@@ -1,9 +1,5 @@
-import Cells.Cell;
-import Cells.IntCell;
-import Cells.StringCell;
+import Comands.CommandProcessor;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Scanner;
 
 public class Application {
@@ -18,7 +14,7 @@ public class Application {
                 System.out.println(commandProcessor.executeCommand(input));
             }
 
-            if (commandProcessor.getCommand() == "exit"){
+            if (commandProcessor.getLastCommand() == "exit"){
                 isRunning=false;
                 scanner.close();
             }
