@@ -11,7 +11,7 @@ public class CellFactory {
             return new StringCell(textContent);
         }
         if (data.startsWith("=")) {
-            return new StringCell(data);
+            return new FormulaCell(data);
         }
         try {
             int intValue = Integer.parseInt(data);

@@ -20,6 +20,7 @@ public class CommandProcessor {
         commands.put("exit",    new ExitCommand());
         commands.put("print",   new PrintCommand());
         commands.put("edit",    new EditCommand());
+
     }
 
     public String executeCommand(String input) {

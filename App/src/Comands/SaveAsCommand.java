@@ -1,5 +1,7 @@
 package Comands;
 
+import java.io.File;
+
 public class SaveAsCommand implements Command {
     @Override
     public String execute(String filePath, CommandContext context) {
@@ -14,7 +16,7 @@ public class SaveAsCommand implements Command {
 
         if (!result.startsWith("Error")) {
             if (!context.currentFilePath.equals(filePath)) {
-                new java.io.File(context.currentFilePath).delete();
+                new File(context.currentFilePath).delete();
             }
             context.currentFilePath = filePath;
         }
