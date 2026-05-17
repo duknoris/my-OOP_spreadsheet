@@ -2,7 +2,11 @@ package Comands;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+/**
+ * Command that sets or replaces the content of a specific spreadsheet cell.
 
+ * <p>Example: {@code edit R1C2 "Hallo"}</p>
+ */
 public class EditCommand implements Command {
     @Override
     public String execute(String arguments, CommandContext context) {

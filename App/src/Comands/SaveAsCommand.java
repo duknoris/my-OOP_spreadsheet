@@ -2,6 +2,12 @@ package Comands;
 
 import java.io.File;
 
+/**
+ * Command that saves the current spreadsheet to a new file path.
+ * <p>
+ * Invoked with: {@code save as <file>}
+ * </p>
+ */
 public class SaveAsCommand implements Command {
     @Override
     public String execute(String filePath, CommandContext context) {

@@ -1,5 +1,11 @@
 package Cells;
-
+/**
+ * A {@link Cell} that holds an integer value.
+ * <p>
+ * Created by {@link CellFactory} when the raw cell data can be parsed by
+ * {@link Integer}.
+ * </p>
+ */
 public class IntCell implements Cell {
 
     private int value;

@@ -4,6 +4,23 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+/**
+ * A {@link Cell} that holds an arithmetic formula.
+ * <p>
+ * A formula string must begin with {@code =} and may contain:
+ * </p>
+ * <ul>
+ *   <li>Integer and floating-point literals (e.g. {@code 3}, {@code 1.5})</li>
+ *   <li>Cell references in {@code R<row>C<col>} notation (1-based), e.g.
+ *       {@code R1C2} refers to row 1, column 2</li>
+ *   <li>Arithmetic operators: {@code +}, {@code -}, {@code *}, {@code /},
+ *       {@code ^} (exponentiation)</li>
+ *   <li>Parentheses for grouping</li>
+ * </ul>
+ * <p>
+ * Example: {@code =R1C1+R1C2*2}
+ * </p>
+ */
 public class FormulaCell implements Cell {
     private String formula;
 
@@ -140,8 +157,4 @@ public class FormulaCell implements Cell {
         // просто число
         return Double.parseDouble(expr.trim());
     }
-
-
-
-
 }

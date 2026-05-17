@@ -1,5 +1,10 @@
 package Comands;
-
+/**
+ * Command that opens a spreadsheet file for editing.
+ * <p>
+ * Invoked with: {@code open <file>}
+ * </p>
+ */
 public class OpenCommand implements Command {
     @Override
     public String execute(String filePath, CommandContext context) {

@@ -1,5 +1,12 @@
 package Cells;
 
+/**
+ * Factory for creating {@link Cell} instances from raw string data.
+ * <p>
+ * {@code CellFactory} inspects the content of a raw string and constructs the
+ * most appropriate {@link Cell} subtype:
+ * </p>
+ */
 public class CellFactory {
     public static Cell create(String data){
         data = data.trim();

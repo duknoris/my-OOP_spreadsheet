@@ -1,5 +1,11 @@
 package Comands;
 
+/**
+ * Command that prints a summary of all available commands and their syntax.
+ * <p>
+ * Invoked with: {@code help}
+ * </p>
+ */
 public class HelpCommand implements Command {
     @Override
     public String execute(String arguments, CommandContext context) {

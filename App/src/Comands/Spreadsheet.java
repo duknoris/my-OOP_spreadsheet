@@ -9,7 +9,25 @@ import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
-
+/**
+ * <p>
+ * The spreadsheet is modelled as a list of rows, each row being a list of
+ * {@link Cell} objects.
+ * </p>
+ * <h3>File format</h3>
+ * <p>
+ * Files are plain-text xml where each line represents a row and commas
+ * separate cells.
+ * </p>
+ * <ul>
+ *   <li>Empty string → {@link Cells.EmptyCell}</li>
+ *   <li>Integer literal → {@link Cells.IntCell}</li>
+ *   <li>Floating-point literal → {@link Cells.DoubleCell}</li>
+ *   <li>Double-quoted text (e.g. {@code "hello"}) → {@link StringCell}</li>
+ *   <li>Formula starting with {@code =} (e.g. {@code =R1C1+R1C2}) →
+ *       {@link FormulaCell}</li>
+ * </ul>
+ */
 public class Spreadsheet {
 
 
@@ -23,6 +41,9 @@ public class Spreadsheet {
         this.table.add(row);
     }
 
+    /**
+     * Renders the spreadsheet
+     */
     public String printTable() {
         if (table.isEmpty()) return "Empty table";
 
@@ -51,6 +72,10 @@ public class Spreadsheet {
         return builder.toString();
     }
 
+
+    /**
+     * Returns the display value of a cell
+     */
     private String getDisplayValue(Cell cell) {
         if (cell instanceof FormulaCell) {
             return ((FormulaCell) cell).evaluate(table);
@@ -58,6 +83,12 @@ public class Spreadsheet {
         return cell.getDisplayValue();
     }
 
+    /**
+     * Loads the spreadsheet from a hml file, replacing all current data.
+     * <p>
+     * If the file does not exist it is created as an empty file and the
+     * spreadsheet remains empty. Each line of the file is split on commas
+     */
     public String loadFromFile(String filePath) {
         this.table.clear();
         File file = new File(filePath);
@@ -96,6 +127,10 @@ public class Spreadsheet {
     }
 
 
+    /**
+     * Serialises the spreadsheet back to its XML text representation.
+     * @return the full XML content of the spreadsheet as a single string
+     */
     public String translateToText(){
         StringBuilder sd = new StringBuilder();
         for (List<Cell> row : table){
@@ -116,6 +151,19 @@ public class Spreadsheet {
         return sd.toString();
     }
 
+
+    /**
+     * Sets or replaces the cell at the given 1-based row and column.
+     * <p>
+     * If the target row or column does not yet exist, the table is extended
+     * with {@link Cells.EmptyCell}
+     * </p>
+     *
+     * @param row     the 1-based row
+     * @param column  the 1-based column
+     * @param content the new cell content in any format accepted by
+     *                {@link CellFactory}
+     */
     public String setCell(int row, int column,String content ){
         int rowIndex = row - 1;
         int colIndex = column - 1;
@@ -123,17 +171,14 @@ public class Spreadsheet {
         if (rowIndex < 0 || colIndex < 0) {
             return "Error: row and column must be greater than 0";
         }
-
         while (table.size() <= rowIndex) {
             table.add(new ArrayList<>());
         }
-
         List<Cell> currentRow = table.get(rowIndex);
 
         while (currentRow.size() <= colIndex) {
             currentRow.add(new Cells.EmptyCell());
         }
-
         try {
             currentRow.set(colIndex, CellFactory.create(content));
             return "Successfully edited R" + row + "C" + column;
@@ -142,6 +187,9 @@ public class Spreadsheet {
         }
     }
 
+    /**
+     * Writes the spreadsheet to a file at the given path using the XML format
+     */
     public String saveToFile(String filePath) {
         String content = translateToText();
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(filePath))) {

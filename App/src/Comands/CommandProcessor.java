@@ -3,6 +3,24 @@ package Comands;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * Parses and dispatches raw user input to the appropriate {@link Command}.
+ *
+ * <p>Registered commands </p>
+ * <ul>
+ *   <li>{@code open} → {@link OpenCommand}</li>
+ *   <li>{@code close} → {@link CloseCommand}</li>
+ *   <li>{@code save as} → {@link SaveAsCommand}</li>
+ *   <li>{@code save} → {@link SaveCommand}</li>
+ *   <li>{@code help} → {@link HelpCommand}</li>
+ *   <li>{@code exit} → {@link ExitCommand}</li>
+ *   <li>{@code print} → {@link PrintCommand}</li>
+ *   <li>{@code edit} → {@link EditCommand}</li>
+ * </ul>
+ *
+ * <p><strong>Note:</strong> {@code "save as"} must be checked before
+ * {@code "save"} to avoid the shorter keyword consuming the longer one.</p>
+ */
 public class CommandProcessor {
 
     private CommandContext context;

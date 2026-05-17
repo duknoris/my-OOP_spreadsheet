@@ -1,5 +1,9 @@
 package Comands;
-
+/**
+ * Command that closes the currently open spreadsheet file.
+ * <p>
+ * Invoked with: {@code close}
+ */
 public class CloseCommand implements Command {
     @Override
     public String execute(String arguments, CommandContext context) {
